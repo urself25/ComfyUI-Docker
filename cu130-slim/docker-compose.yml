@@ -1,14 +1,26 @@
 services:
-
   comfyui:
-    init: true
-    container_name: comfyui
     build:
       context: .
       dockerfile: Dockerfile
-    image: "yanwk/comfyui-boot:cu130-slim"
+    container_name: comfyui
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities:
+                - gpu
+              device_ids:
+                - '0'
+              driver: nvidia
+    environment:
+      - CLI_ARGS=
+    image: yanwk/comfyui-boot:cu124-slim
+    init: True
     ports:
-      - "8188:8188"
+      - '8188:8188'
+    security_opt:
+      - label=type:nvidia_container_t
     volumes:
       - "./storage:/root"
       - "./storage-models/models:/root/ComfyUI/models"
@@ -17,14 +29,3 @@ services:
       - "./storage-user/input:/root/ComfyUI/input"
       - "./storage-user/output:/root/ComfyUI/output"
       - "./storage-user/workflows:/root/ComfyUI/user/default/workflows"
-    environment:
-      - CLI_ARGS=
-    security_opt:
-      - "label=type:nvidia_container_t"
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ['2']
-              capabilities: [gpu]
