@@ -15,8 +15,8 @@ services:
               driver: nvidia
     environment:
       - CLI_ARGS=
-    image: yanwk/comfyui-boot:cu124-slim
-    init: True
+    image: yanwk/comfyui-boot:cu130-slim
+    init: true
     ports:
       - '8188:8188'
     security_opt:
